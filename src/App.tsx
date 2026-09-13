@@ -374,7 +374,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#110f2e] text-slate-100 font-sans relative selection:bg-teal-400 selection:text-slate-950">
+    <div className="min-h-screen bg-[#bce3fa] text-slate-800 font-sans relative selection:bg-sky-200 selection:text-slate-900">
       {/* Active Tab View */}
       <main className="w-full">
         {currentUser && (
