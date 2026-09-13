@@ -1,0 +1,6 @@
+{
+  "name": "CampusBuddy",
+  "description": "Student connection and buddy platform for matching peers by compatibility, finding study, lunch, and activity groups, and chatting in real time.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
