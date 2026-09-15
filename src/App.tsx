@@ -21,6 +21,7 @@ import { ChatTab } from "./components/ChatTab";
 import { BuddyTab } from "./components/BuddyTab";
 import { ProfileTab } from "./components/ProfileTab";
 import { useRealtime } from "./hooks/useRealtime";
+import { api } from "./services/api";
 
 type AppScreen = "auth" | "onboarding" | "app";
 
@@ -53,32 +54,16 @@ export default function App() {
   const loadData = useCallback(async () => {
     try {
       // 1. Current user
-      const userRes = await fetch("/api/user/profile");
-      const userData = await userRes.json();
-      if (userData.success && userData.user) {
-        setCurrentUser(userData.user);
-      }
+      const user = await api.getUserProfile();
+      setCurrentUser(user);
 
       // 2. Peer profiles with compatibility
-      const params = new URLSearchParams();
-      if (filters.selectedMajor !== "All") params.append("major", filters.selectedMajor);
-      if (filters.selectedYear !== "All") params.append("year", filters.selectedYear);
-      if (filters.minCompatibility > 0) params.append("minScore", filters.minCompatibility.toString());
-      if (filters.selectedInterests.length > 0) params.append("interest", filters.selectedInterests[0]);
-      if (filters.searchQuery) params.append("search", filters.searchQuery);
-
-      const peersRes = await fetch(`/api/profiles?${params.toString()}`);
-      const peersData = await peersRes.json();
-      if (peersData.success && peersData.profiles) {
-        setPeerProfiles(peersData.profiles);
-      }
+      const peers = await api.getProfiles(filters);
+      setPeerProfiles(peers);
 
       // 3. Buddy announcements
-      const buddiesRes = await fetch("/api/buddies");
-      const buddiesData = await buddiesRes.json();
-      if (buddiesData.success && buddiesData.announcements) {
-        setBuddyAnnouncements(buddiesData.announcements);
-      }
+      const buddies = await api.getBuddies();
+      setBuddyAnnouncements(buddies);
     } catch (err) {
       console.error("Error loading app data:", err);
     }
@@ -87,11 +72,8 @@ export default function App() {
   // Load chat messages when an active peer is selected
   const loadMessages = useCallback(async (peerId: string) => {
     try {
-      const res = await fetch(`/api/conversations/${peerId}/messages`);
-      const data = await res.json();
-      if (data.success && data.messages) {
-        setChatMessages(data.messages);
-      }
+      const messages = await api.getMessages(peerId);
+      setChatMessages(messages);
     } catch (e) {
       console.error("Error loading chat messages:", e);
     }
@@ -196,15 +178,8 @@ export default function App() {
 
   const handleOnboardingComplete = async (profile: UserProfile) => {
     try {
-      const res = await fetch("/api/user/profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profile),
-      });
-      const data = await res.json();
-      if (data.success && data.user) {
-        setCurrentUser(data.user);
-      }
+      const updated = await api.updateUserProfile(profile);
+      setCurrentUser(updated);
     } catch (e) {
       console.error("Error saving profile:", e);
     }
@@ -223,11 +198,8 @@ export default function App() {
 
   const handleSendMessage = async (receiverId: string, text: string) => {
     try {
-      await fetch("/api/conversations/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ receiverId, text }),
-      });
+      const newMsg = await api.sendMessage({ receiverId, text });
+      setChatMessages((prev) => [...prev, newMsg]);
     } catch (e) {
       console.error("Error sending message:", e);
     }
@@ -235,15 +207,12 @@ export default function App() {
 
   const handleProposePlan = async (peer: PeerProfile, plan: any) => {
     try {
-      await fetch("/api/conversations/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          receiverId: peer.id,
-          text: `Proposed a ${plan.category} meetup: "${plan.title}" at ${plan.location} on ${plan.dateTime}`,
-          planMeetup: plan,
-        }),
+      const newMsg = await api.sendMessage({
+        receiverId: peer.id,
+        text: `Proposed a ${plan.category} meetup: "${plan.title}" at ${plan.location} on ${plan.dateTime}`,
+        planMeetup: plan,
       });
+      setChatMessages((prev) => [...prev, newMsg]);
       setActiveChatPeer(peer);
       setCurrentTab("chat");
     } catch (e) {
@@ -253,11 +222,16 @@ export default function App() {
 
   const handleRespondPlan = async (planId: string, status: "accepted" | "declined") => {
     try {
-      await fetch(`/api/conversations/plans/${planId}/status`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      });
+      const updatedPlan = await api.updatePlanStatus(planId, status);
+      if (updatedPlan) {
+        setChatMessages((prev) =>
+          prev.map((m) =>
+            m.planMeetup && m.planMeetup.id === planId
+              ? { ...m, planMeetup: updatedPlan }
+              : m
+          )
+        );
+      }
     } catch (e) {
       console.error("Error responding to meetup plan:", e);
     }
@@ -266,9 +240,12 @@ export default function App() {
   // Buddy Announcements Actions
   const handleJoinBuddy = async (announcementId: string) => {
     try {
-      await fetch(`/api/buddies/${announcementId}/join`, {
-        method: "POST",
-      });
+      const updated = await api.joinBuddy(announcementId);
+      if (updated) {
+        setBuddyAnnouncements((prev) =>
+          prev.map((b) => (b.id === announcementId ? updated : b))
+        );
+      }
     } catch (e) {
       console.error("Error joining buddy group:", e);
     }
@@ -276,9 +253,12 @@ export default function App() {
 
   const handleLeaveBuddy = async (announcementId: string) => {
     try {
-      await fetch(`/api/buddies/${announcementId}/leave`, {
-        method: "POST",
-      });
+      const updated = await api.leaveBuddy(announcementId);
+      if (updated) {
+        setBuddyAnnouncements((prev) =>
+          prev.map((b) => (b.id === announcementId ? updated : b))
+        );
+      }
     } catch (e) {
       console.error("Error leaving buddy group:", e);
     }
@@ -294,11 +274,8 @@ export default function App() {
     tags: string[];
   }) => {
     try {
-      await fetch("/api/buddies", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const newAnn = await api.createBuddy(data);
+      setBuddyAnnouncements((prev) => [newAnn, ...prev]);
     } catch (e) {
       console.error("Error creating buddy announcement:", e);
     }
@@ -316,15 +293,8 @@ export default function App() {
   // Profile Update & Multi-User Switcher
   const handleUpdateProfile = async (updates: Partial<UserProfile>) => {
     try {
-      const res = await fetch("/api/user/profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updates),
-      });
-      const data = await res.json();
-      if (data.success && data.user) {
-        setCurrentUser(data.user);
-      }
+      const updated = await api.updateUserProfile(updates);
+      setCurrentUser(updated);
       loadData();
     } catch (e) {
       console.error("Error updating profile:", e);
@@ -333,14 +303,9 @@ export default function App() {
 
   const handleSwitchPersona = async (userId: string) => {
     try {
-      const res = await fetch("/api/demo/switch-user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
-      });
-      const data = await res.json();
-      if (data.success && data.user) {
-        setCurrentUser(data.user);
+      const target = await api.switchUser(userId);
+      if (target) {
+        setCurrentUser(target);
         loadData();
       }
     } catch (e) {

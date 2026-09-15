@@ -8,15 +8,15 @@ export interface WebSocketEvent<T = unknown> {
 export function useRealtime(onEvent?: (event: string, payload: unknown) => void) {
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
+  const retryCountRef = useRef(0);
   const onEventRef = useRef(onEvent);
   onEventRef.current = onEvent;
-  const retryCountRef = useRef(0);
-  const timerRef = useRef<any>(null);
 
   const connect = useCallback(() => {
     if (typeof window === "undefined") return;
-    if (retryCountRef.current > 3) {
-      // Graceful fallback for static environments like Vercel where WebSockets aren't hosted
+
+    // Limit reconnect attempts on platforms without WebSocket server (e.g., static Vercel)
+    if (retryCountRef.current > 4) {
       return;
     }
 
@@ -39,35 +39,35 @@ export function useRealtime(onEvent?: (event: string, payload: unknown) => void)
           if (parsed.event && onEventRef.current) {
             onEventRef.current(parsed.event, parsed.payload);
           }
-        } catch {
-          // Ignore parse errors
+        } catch (e) {
+          // parse error
         }
       };
 
       ws.onclose = () => {
         setIsConnected(false);
         retryCountRef.current += 1;
-        if (retryCountRef.current <= 3) {
-          timerRef.current = setTimeout(() => {
+        if (retryCountRef.current <= 4) {
+          const backoff = Math.min(10000, 2000 * retryCountRef.current);
+          setTimeout(() => {
             if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
               connect();
             }
-          }, 3000 * retryCountRef.current);
+          }, backoff);
         }
       };
 
       ws.onerror = () => {
         setIsConnected(false);
       };
-    } catch {
-      // Ignore initial connection errors on static hosting
+    } catch (err) {
+      // quiet fallback
     }
   }, []);
 
   useEffect(() => {
     connect();
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
       if (wsRef.current) {
         wsRef.current.close();
       }
