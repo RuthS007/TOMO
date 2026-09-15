@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import tomoLogoImg from "../assets/images/tomo_app_logo_1789482747515.jpg";
+import tomoLogoImg from "../assets/images/tomo_teal_purple_logo_1789483241265.jpg";
 
 interface LogoProps {
   size?: "sm" | "md" | "lg" | "xl";
@@ -29,14 +29,14 @@ export const Logo: React.FC<LogoProps> = ({
 
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
-      {/* Brand Icon */}
+      {/* Brand Icon with Teal + Purple Hue */}
       <div
-        className={`${box} ${radius} overflow-hidden relative flex items-center justify-center bg-white shadow-xs ring-1 ring-black/5 shrink-0`}
+        className={`${box} ${radius} overflow-hidden relative flex items-center justify-center bg-white shadow-xs ring-1 ring-slate-900/10 shrink-0`}
       >
         {!imgError ? (
           <img
             src={tomoLogoImg}
-            alt="TOMO Logo"
+            alt="TOMO"
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover"
             onError={() => setImgError(true)}
@@ -48,17 +48,19 @@ export const Logo: React.FC<LogoProps> = ({
             xmlns="http://www.w3.org/2000/svg"
             className="w-full h-full p-1.5"
           >
-            <circle cx="34" cy="30" r="10" fill="#0284C7" />
+            {/* Left figure: Deep Teal */}
+            <circle cx="34" cy="30" r="10" fill="#0d9488" />
             <path
               d="M24 80V52C24 44 30 40 38 40H42C50 40 54 46 54 54V80"
-              stroke="#0284C7"
+              stroke="#0d9488"
               strokeWidth="11"
               strokeLinecap="round"
             />
-            <circle cx="68" cy="32" r="10" fill="#10B981" />
+            {/* Right figure: Rich Violet/Purple */}
+            <circle cx="68" cy="32" r="10" fill="#7c3aed" />
             <path
               d="M48 64C52 54 62 46 72 46C82 46 88 54 88 64C88 74 80 82 70 82C60 82 50 74 48 64Z"
-              stroke="#10B981"
+              stroke="#7c3aed"
               strokeWidth="11"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -73,7 +75,7 @@ export const Logo: React.FC<LogoProps> = ({
             className={`font-display font-extrabold tracking-tight ${text} ${textColor} flex items-center gap-1.5`}
           >
             TOMO
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-500 inline-block" />
+            <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-teal-500 to-violet-600 inline-block" />
           </span>
           {subtitle && (
             <span className={`${sub} text-slate-500 font-medium tracking-normal mt-0.5`}>

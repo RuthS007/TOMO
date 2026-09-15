@@ -65,36 +65,36 @@ export const ChatTab: React.FC<ChatTabProps> = ({
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#bce3fa] via-[#d6f2fb] to-[#e4f9f0] text-slate-800 pb-24 pt-3 px-4 max-w-md mx-auto relative select-none">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 pb-28 pt-3 px-4 max-w-md mx-auto relative select-none">
       {activePeer ? (
         /* ACTIVE CONVERSATION ROOM */
-        <div className="flex flex-col h-[calc(100vh-120px)]">
+        <div className="flex flex-col h-[calc(100vh-130px)]">
           {/* Header */}
           <div className="flex items-center justify-between pb-3 bg-transparent">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => onSelectPeer(null)}
-                className="w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 shadow-sm flex items-center justify-center transition cursor-pointer"
+                className="w-9 h-9 rounded-full bg-white hover:bg-slate-100 text-slate-700 shadow-xs border border-slate-200/80 flex items-center justify-center transition cursor-pointer active:scale-95"
                 aria-label="Back to chats"
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft className="w-4 h-4" />
               </button>
 
               <div className="relative">
                 <img
                   src={activePeer.avatar}
                   alt={activePeer.name}
-                  className="w-11 h-11 rounded-full object-cover ring-2 ring-white shadow-sm"
+                  className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-xs"
                   referrerPolicy="no-referrer"
                 />
-                <span className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-400 ring-2 ring-white" />
+                <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-teal-500 ring-2 ring-white" />
               </div>
 
               <div>
-                <h3 className="font-display font-extrabold text-base text-[#182635] leading-tight">
+                <h3 className="font-display font-bold text-base text-slate-900 leading-tight">
                   {activePeer.name}
                 </h3>
-                <p className="text-[11px] text-sky-600 font-semibold">
+                <p className="text-[11px] text-teal-700 font-semibold">
                   {activePeer.major}
                 </p>
               </div>
@@ -102,35 +102,35 @@ export const ChatTab: React.FC<ChatTabProps> = ({
 
             <button
               onClick={() => setShowPlanModal(true)}
-              className="px-3.5 py-1.5 rounded-full bg-white/90 hover:bg-white text-emerald-700 font-bold text-xs shadow-sm flex items-center gap-1.5 transition cursor-pointer border border-emerald-200"
+              className="px-3.5 py-1.5 rounded-full bg-violet-50 hover:bg-violet-100 text-violet-800 font-bold text-xs shadow-xs flex items-center gap-1.5 transition cursor-pointer border border-violet-200/70 active:scale-95"
             >
-              <Calendar className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Plan</span>
+              <Calendar className="w-3.5 h-3.5 text-violet-600" />
+              <span>Meetup</span>
             </button>
           </div>
 
           {/* White Message Container Sheet */}
-          <div className="flex-1 bg-white rounded-3xl shadow-xl p-4 flex flex-col overflow-hidden border border-white/80">
-            {/* Pinned Plan Banner (Minimal words & visual badge) */}
+          <div className="flex-1 bg-white rounded-3xl shadow-[0_4px_20px_-4px_rgba(15,23,42,0.06)] p-4 flex flex-col overflow-hidden border border-slate-200/80">
+            {/* Pinned Plan Banner */}
             {latestPlan && (
-              <div className="mb-3 p-3 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-between gap-2 shadow-xs shrink-0">
+              <div className="mb-3 p-3 rounded-2xl bg-violet-50/70 border border-violet-200/70 flex items-center justify-between gap-2 shadow-xs shrink-0">
                 <div className="min-w-0">
-                  <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-sky-700">
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-violet-900">
                     <span>📅 {latestPlan.category}</span>
                     <span>•</span>
                     <span
-                      className={`px-2 py-0.2 rounded-full ${
+                      className={`px-2 py-0.5 rounded-full text-[10px] ${
                         latestPlan.status === "accepted"
-                          ? "bg-emerald-100 text-emerald-700"
+                          ? "bg-emerald-100 text-emerald-800"
                           : latestPlan.status === "declined"
-                          ? "bg-rose-100 text-rose-700"
-                          : "bg-amber-100 text-amber-700"
+                          ? "bg-rose-100 text-rose-800"
+                          : "bg-violet-100 text-violet-800 font-semibold"
                       }`}
                     >
                       {latestPlan.status}
                     </span>
                   </div>
-                  <div className="font-bold text-xs text-slate-800 truncate mt-0.5">
+                  <div className="font-bold text-xs text-slate-900 truncate mt-0.5">
                     {latestPlan.title}
                   </div>
                   <div className="text-[11px] text-slate-500 truncate">
@@ -142,13 +142,13 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                   <div className="flex items-center gap-1 shrink-0">
                     <button
                       onClick={() => onRespondPlan(latestPlan.id, "accepted")}
-                      className="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[11px] font-bold cursor-pointer"
+                      className="px-3 py-1 rounded-full bg-teal-700 hover:bg-teal-800 text-white text-[11px] font-bold cursor-pointer transition shadow-xs"
                     >
                       Accept
                     </button>
                     <button
                       onClick={() => onRespondPlan(latestPlan.id, "declined")}
-                      className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[11px] font-bold cursor-pointer"
+                      className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-[11px] font-bold cursor-pointer transition"
                     >
                       Pass
                     </button>
@@ -161,14 +161,14 @@ export const ChatTab: React.FC<ChatTabProps> = ({
             <div className="flex-1 overflow-y-auto space-y-3 pr-1">
               {messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400">
-                  <div className="w-14 h-14 rounded-full bg-sky-50 text-sky-500 flex items-center justify-center text-2xl mb-2">
+                  <div className="w-13 h-13 rounded-full bg-teal-50 text-teal-700 flex items-center justify-center text-2xl mb-2 border border-teal-100">
                     👋
                   </div>
-                  <p className="font-bold text-sm text-slate-700">
+                  <p className="font-bold text-sm text-slate-800">
                     Say hello to {activePeer.name}
                   </p>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Free for lunch or looking to study?
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Free for lunch, coffee, or looking to study?
                   </p>
 
                   <div className="mt-4 flex flex-wrap justify-center gap-2">
@@ -180,7 +180,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                       <button
                         key={i}
                         onClick={() => sendIcebreaker(ice)}
-                        className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs transition cursor-pointer"
+                        className="px-3 py-1.5 rounded-full bg-violet-50 hover:bg-violet-100 text-violet-800 border border-violet-200/60 text-xs font-semibold transition cursor-pointer"
                       >
                         {ice}
                       </button>
@@ -206,16 +206,16 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                         />
                       )}
                       <div
-                        className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-xs sm:text-sm shadow-xs ${
+                        className={`max-w-[75%] px-3.5 py-2 rounded-2xl text-xs sm:text-sm shadow-xs ${
                           isMe
-                            ? "bg-[#182635] text-white rounded-br-xs"
-                            : "bg-slate-100 text-slate-800 rounded-bl-xs"
+                            ? "bg-teal-700 text-white rounded-br-xs"
+                            : "bg-slate-100 text-slate-800 rounded-bl-xs border border-slate-200/60"
                         }`}
                       >
                         <p className="leading-relaxed">{m.text}</p>
                         <div
                           className={`text-[9px] mt-1 text-right ${
-                            isMe ? "text-slate-300" : "text-slate-400"
+                            isMe ? "text-teal-100" : "text-slate-400"
                           }`}
                         >
                           {new Date(m.timestamp).toLocaleTimeString([], {
@@ -232,14 +232,14 @@ export const ChatTab: React.FC<ChatTabProps> = ({
             </div>
 
             {/* Input Form */}
-            <form onSubmit={handleSend} className="pt-2 flex items-center gap-2">
+            <form onSubmit={handleSend} className="pt-2.5 flex items-center gap-2 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => setShowPlanModal(true)}
-                className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center shrink-0 cursor-pointer"
+                className="w-9 h-9 rounded-full bg-violet-50 hover:bg-violet-100 text-violet-700 border border-violet-200/60 flex items-center justify-center shrink-0 cursor-pointer transition active:scale-95"
                 title="Plan Meetup"
               >
-                <Calendar className="w-4 h-4 text-sky-500" />
+                <Calendar className="w-4 h-4 text-violet-600" />
               </button>
 
               <input
@@ -247,15 +247,15 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="Type a message..."
-                className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-full text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                className="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
 
               <button
                 type="submit"
                 disabled={!inputText.trim()}
-                className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition cursor-pointer ${
+                className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition cursor-pointer active:scale-95 ${
                   inputText.trim()
-                    ? "bg-sky-500 text-white shadow-md"
+                    ? "bg-teal-700 hover:bg-teal-800 text-white shadow-xs"
                     : "bg-slate-100 text-slate-300"
                 }`}
               >
@@ -277,38 +277,43 @@ export const ChatTab: React.FC<ChatTabProps> = ({
           )}
         </div>
       ) : (
-        /* CHATS LIST (Matching Screen 3 in Reference Image) */
+        /* CHATS LIST */
         <div>
           {/* Header */}
           <div className="flex items-center justify-between pt-1 pb-3">
-            <h1 className="font-display font-extrabold text-2xl text-[#17253b] tracking-tight">
-              Chats
-            </h1>
+            <div>
+              <h1 className="font-display font-extrabold text-2xl text-slate-900 tracking-tight">
+                Messages
+              </h1>
+              <p className="text-[11px] text-slate-500 font-medium">
+                Connected campus friends & active threads
+              </p>
+            </div>
 
-            <div className="w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 shadow-sm flex items-center justify-center transition cursor-pointer">
-              <Search className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-full bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 shadow-xs flex items-center justify-center transition cursor-pointer">
+              <Search className="w-4 h-4 text-slate-500" />
             </div>
           </div>
 
-          {/* Stories / Active Tray at top (Matching circular avatars with green online badge in reference screen 3) */}
+          {/* Stories / Active Tray at top */}
           <div className="mb-4">
-            <div className="flex items-center gap-3.5 overflow-x-auto pb-1 no-scrollbar">
+            <div className="flex items-center gap-3 overflow-x-auto pb-1 no-scrollbar">
               {peerProfiles.map((peer) => (
                 <button
                   key={peer.id}
                   onClick={() => onSelectPeer(peer)}
-                  className="flex flex-col items-center gap-1 shrink-0 cursor-pointer group"
+                  className="flex flex-col items-center gap-1 shrink-0 cursor-pointer group active:scale-95 transition"
                 >
                   <div className="relative">
                     <img
                       src={peer.avatar}
                       alt={peer.name}
-                      className="w-14 h-14 rounded-full object-cover ring-2 ring-white shadow-md group-hover:scale-105 transition"
+                      className="w-13 h-13 rounded-full object-cover ring-2 ring-white shadow-xs group-hover:scale-105 transition"
                       referrerPolicy="no-referrer"
                     />
-                    <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-400 ring-2 ring-white" />
+                    <span className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-teal-500 ring-2 ring-white" />
                   </div>
-                  <span className="text-[11px] font-bold text-slate-700 max-w-[56px] truncate">
+                  <span className="text-[11px] font-bold text-slate-700 max-w-[56px] truncate group-hover:text-teal-700 transition">
                     {peer.name.split(" ")[0]}
                   </span>
                 </button>
@@ -316,13 +321,13 @@ export const ChatTab: React.FC<ChatTabProps> = ({
             </div>
           </div>
 
-          {/* White Bottom Sheet Container for Conversations */}
-          <div className="bg-white rounded-t-[36px] p-5 shadow-2xl min-h-[500px] border border-white/80">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
-              Active
+          {/* Clean Card Container for Conversations */}
+          <div className="bg-white rounded-3xl p-3.5 shadow-xs border border-slate-200/80 min-h-[480px]">
+            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-2">
+              Recent Chats
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-1.5">
               {filteredPeers.map((peer, idx) => {
                 const convMsgs = messages.filter(
                   (m) =>
@@ -336,33 +341,33 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                   <div
                     key={peer.id}
                     onClick={() => onSelectPeer(peer)}
-                    className="p-3 rounded-2xl hover:bg-slate-50 transition flex items-center justify-between gap-3 cursor-pointer group"
+                    className="p-3 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-200/60 transition flex items-center justify-between gap-3 cursor-pointer group"
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="relative shrink-0">
                         <img
                           src={peer.avatar}
                           alt={peer.name}
-                          className="w-12 h-12 rounded-full object-cover ring-1 ring-slate-100"
+                          className="w-11 h-11 rounded-full object-cover ring-1 ring-slate-200"
                           referrerPolicy="no-referrer"
                         />
-                        <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-400 ring-2 ring-white" />
+                        <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-teal-500 ring-2 ring-white" />
                       </div>
 
                       <div className="min-w-0">
-                        <h4 className="font-display font-bold text-sm text-slate-900 group-hover:text-sky-600 transition">
+                        <h4 className="font-display font-bold text-sm text-slate-900 group-hover:text-teal-700 transition">
                           {peer.name}
                         </h4>
-                        <p className="text-xs text-slate-400 truncate mt-0.5">
+                        <p className="text-xs text-slate-500 truncate mt-0.5">
                           {last
                             ? `${last.senderId === currentUser.id ? "You: " : ""}${last.text}`
-                            : `Hey ${currentUser.name.split(" ")[0]}! How you doin?`}
+                            : `Hey ${currentUser.name.split(" ")[0]}! Want to grab lunch?`}
                         </p>
                       </div>
                     </div>
 
                     <div className="flex flex-col items-end gap-1 shrink-0">
-                      <span className="text-[10px] text-slate-400">
+                      <span className="text-[10px] text-slate-400 font-medium">
                         {last
                           ? new Date(last.timestamp).toLocaleTimeString([], {
                               hour: "2-digit",
@@ -371,7 +376,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                           : "09:16 AM"}
                       </span>
                       {unread > 0 && (
-                        <span className="w-4 h-4 rounded-full bg-sky-500 text-white text-[10px] font-bold flex items-center justify-center">
+                        <span className="w-4 h-4 rounded-full bg-violet-600 text-white text-[10px] font-bold flex items-center justify-center">
                           {unread}
                         </span>
                       )}

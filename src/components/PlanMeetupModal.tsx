@@ -61,14 +61,14 @@ export const PlanMeetupModal: React.FC<PlanMeetupModalProps> = ({
             <img
               src={peer.avatar}
               alt={peer.name}
-              className="w-10 h-10 rounded-full object-cover ring-2 ring-sky-200"
+              className="w-10 h-10 rounded-full object-cover ring-2 ring-teal-200"
               referrerPolicy="no-referrer"
             />
             <div>
               <h3 className="font-display font-extrabold text-sm text-slate-900">
                 Plan Meetup
               </h3>
-              <p className="text-[11px] text-sky-600 font-semibold">
+              <p className="text-[11px] text-teal-700 font-semibold">
                 with {peer.name}
               </p>
             </div>
@@ -83,7 +83,7 @@ export const PlanMeetupModal: React.FC<PlanMeetupModalProps> = ({
 
         {submitted ? (
           <div className="py-8 flex flex-col items-center justify-center text-center">
-            <CheckCircle2 className="w-12 h-12 text-emerald-500 mb-2 animate-bounce" />
+            <CheckCircle2 className="w-12 h-12 text-teal-600 mb-2 animate-bounce" />
             <h4 className="font-bold text-base text-slate-900">Invite Sent!</h4>
             <p className="text-xs text-slate-500 mt-1">
               {peer.name.split(" ")[0]} has been notified in chat.
@@ -105,7 +105,7 @@ export const PlanMeetupModal: React.FC<PlanMeetupModalProps> = ({
                   onClick={() => setCategory(item.id as any)}
                   className={`flex-1 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer text-center ${
                     category === item.id
-                      ? "bg-[#182635] text-white border-[#182635]"
+                      ? "bg-teal-700 text-white border-teal-700 shadow-xs"
                       : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
                   }`}
                 >
@@ -123,7 +123,7 @@ export const PlanMeetupModal: React.FC<PlanMeetupModalProps> = ({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Study history together"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 font-medium"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium"
                 required
               />
             </div>
@@ -137,7 +137,7 @@ export const PlanMeetupModal: React.FC<PlanMeetupModalProps> = ({
                 <select
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 font-medium appearance-none"
+                  className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium appearance-none"
                 >
                   {CAMPUS_LOCATIONS.map((loc) => (
                     <option key={loc} value={loc}>
@@ -159,7 +159,7 @@ export const PlanMeetupModal: React.FC<PlanMeetupModalProps> = ({
                   value={dateTime}
                   onChange={(e) => setDateTime(e.target.value)}
                   placeholder="e.g. Today at 3:30 PM"
-                  className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 font-medium"
+                  className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium"
                   required
                 />
               </div>
@@ -168,7 +168,7 @@ export const PlanMeetupModal: React.FC<PlanMeetupModalProps> = ({
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full py-3 rounded-2xl bg-[#182635] hover:bg-black font-bold text-xs uppercase tracking-wider text-white shadow-md cursor-pointer"
+                className="w-full py-3 rounded-2xl bg-teal-700 hover:bg-teal-800 font-bold text-xs uppercase tracking-wider text-white shadow-md cursor-pointer transition"
               >
                 Send Invite
               </button>

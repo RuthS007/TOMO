@@ -76,19 +76,19 @@ export const HomeTab: React.FC<HomeTabProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#bce3fa] via-[#d6f2fb] to-[#e4f9f0] text-slate-800 pb-28 pt-3 px-4 max-w-md mx-auto relative select-none">
-      {/* Top Header - Clean, modern, friendly */}
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 pb-28 pt-3 px-4 max-w-md mx-auto relative select-none">
+      {/* Top Header - Clean, modern, authentic native mobile feel */}
       <div className="flex items-center justify-between pt-1 pb-2">
-        <Logo size="md" showText={true} subtitle="Find campus friends & study buddies" />
+        <Logo size="md" showText={true} subtitle="Campus peers & study buddies" />
 
         <div className="flex items-center gap-2">
           {/* Quick Search Toggle */}
           <button
             onClick={() => setShowSearch(!showSearch)}
-            className={`w-9 h-9 rounded-full shadow-xs flex items-center justify-center transition cursor-pointer ${
+            className={`w-9 h-9 rounded-full shadow-xs flex items-center justify-center transition cursor-pointer border ${
               showSearch || filters.searchQuery
-                ? "bg-[#182635] text-white"
-                : "bg-white/90 hover:bg-white text-slate-700"
+                ? "bg-teal-700 text-white border-teal-700"
+                : "bg-white hover:bg-slate-50 text-slate-700 border-slate-200/80"
             }`}
             title="Search campus peers"
           >
@@ -98,7 +98,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
           {/* View Mode Toggle: Vertical Feed vs Compact Grid */}
           <button
             onClick={() => setViewMode(viewMode === "feed" ? "grid" : "feed")}
-            className="w-9 h-9 rounded-full bg-white/90 hover:bg-white text-slate-700 shadow-xs flex items-center justify-center transition cursor-pointer"
+            className="w-9 h-9 rounded-full bg-white hover:bg-slate-50 text-slate-700 shadow-xs flex items-center justify-center transition cursor-pointer border border-slate-200/80"
             title={viewMode === "feed" ? "Switch to 2-column grid" : "Switch to vertical feed"}
           >
             {viewMode === "feed" ? (
@@ -115,16 +115,16 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               setTempFilters(filters);
               setShowFilterSheet(true);
             }}
-            className={`relative w-9 h-9 rounded-full flex items-center justify-center transition cursor-pointer shadow-xs ${
+            className={`relative w-9 h-9 rounded-full flex items-center justify-center transition cursor-pointer shadow-xs border ${
               activeFilterCount > 0
-                ? "bg-sky-500 text-white"
-                : "bg-white/90 hover:bg-white text-slate-700"
+                ? "bg-teal-700 text-white border-teal-700"
+                : "bg-white hover:bg-slate-50 text-slate-700 border-slate-200/80"
             }`}
             title="Filter by major, year, or compatibility"
           >
             <SlidersHorizontal className="w-4 h-4" />
             {activeFilterCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-sky-600 text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-white">
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-violet-600 text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-white">
                 {activeFilterCount}
               </span>
             )}
@@ -134,7 +134,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
           <img
             src={currentUser.avatar}
             alt={currentUser.name}
-            className="w-9 h-9 rounded-full object-cover ring-2 ring-white shadow-xs"
+            className="w-9 h-9 rounded-full object-cover ring-2 ring-teal-600/20 shadow-xs"
             referrerPolicy="no-referrer"
           />
         </div>
@@ -150,7 +150,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               value={filters.searchQuery}
               onChange={(e) => onFilterChange({ ...filters, searchQuery: e.target.value })}
               placeholder="Search by name, class, or interest..."
-              className="w-full pl-10 pr-9 py-2 bg-white/95 backdrop-blur-md rounded-2xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-sm border border-white/80"
+              className="w-full pl-10 pr-9 py-2 bg-white rounded-2xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-xs border border-slate-200/80"
               autoFocus
             />
             {filters.searchQuery && (
@@ -173,10 +173,10 @@ export const HomeTab: React.FC<HomeTabProps> = ({
             <button
               key={chip.label}
               onClick={() => handleMajorSelect(chip.label)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap transition cursor-pointer shrink-0 shadow-xs ${
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap transition cursor-pointer shrink-0 shadow-xs border ${
                 isSelected
-                  ? "bg-[#182635] text-white"
-                  : "bg-white/80 hover:bg-white text-slate-700 border border-white/60"
+                  ? "bg-teal-700 text-white border-teal-700 shadow-teal-900/10"
+                  : "bg-white hover:bg-slate-100/80 text-slate-700 border-slate-200/80"
               }`}
             >
               <span className="text-xs">{chip.icon}</span>
@@ -187,11 +187,11 @@ export const HomeTab: React.FC<HomeTabProps> = ({
       </div>
 
       {/* Peer Count Indicator - Reassuring & Friendly */}
-      <div className="flex items-center justify-between px-1 py-1.5 text-[11px] text-slate-600">
-        <span className="font-medium">
-          {profiles.length} campus {profiles.length === 1 ? "buddy" : "buddies"} nearby
+      <div className="flex items-center justify-between px-1 py-1.5 text-[11px] text-slate-500">
+        <span className="font-semibold text-slate-700">
+          {profiles.length} campus {profiles.length === 1 ? "buddy" : "buddies"} active nearby
         </span>
-        <span className="text-slate-500 font-medium">Scroll to explore • No swiping</span>
+        <span className="text-violet-600 font-medium">✨ Real-time campus feed</span>
       </div>
 
       {/* Main Content Area */}
@@ -232,7 +232,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
             return (
               <div
                 key={peer.id}
-                className="bg-white rounded-[32px] overflow-hidden shadow-xl shadow-sky-950/5 border border-white/90 transition duration-200 hover:shadow-2xl"
+                className="bg-white rounded-3xl overflow-hidden shadow-[0_4px_24px_-4px_rgba(15,23,42,0.07)] border border-slate-200/80 transition duration-200 hover:shadow-xl hover:border-slate-300"
               >
                 {/* Visual Edge-to-Edge Photo Section */}
                 <div className="relative aspect-[4/3] w-full bg-slate-900 overflow-hidden">
@@ -243,25 +243,25 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                     referrerPolicy="no-referrer"
                   />
 
-                  {/* Gradient Scrim for readable badges */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30 pointer-events-none" />
+                  {/* Subtle Gradient Scrim for crystal clear readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/30 pointer-events-none" />
 
-                  {/* Top Badges: Compatibility + Academic Year */}
+                  {/* Top Badges: Compatibility in Violet/Purple + Academic Year */}
                   <div className="absolute top-3.5 inset-x-3.5 flex items-center justify-between z-10">
-                    <div className="px-3 py-1 rounded-full bg-white/30 backdrop-blur-md border border-white/40 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs">
+                    <div className="px-3 py-1 rounded-full bg-violet-950/75 backdrop-blur-md border border-violet-400/40 text-violet-100 text-xs font-bold flex items-center gap-1.5 shadow-xs">
                       <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                       <span>{peer.compatibility?.score ?? 85}% Compatible</span>
                     </div>
 
-                    <div className="px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white text-[11px] font-semibold">
+                    <div className="px-2.5 py-1 rounded-full bg-slate-900/65 backdrop-blur-md text-slate-200 text-[11px] font-semibold border border-white/10">
                       {peer.year}
                     </div>
                   </div>
 
                   {/* Bottom Text in Photo Overlay: Name & Major */}
                   <div className="absolute bottom-3.5 left-4 right-4 z-10 text-white">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-white text-[11px] font-medium mb-1">
-                      <MapPin className="w-3 h-3 text-sky-300" />
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-950/75 backdrop-blur-md text-teal-200 text-[11px] font-medium mb-1 border border-teal-500/30">
+                      <MapPin className="w-3 h-3 text-teal-300" />
                       <span>{peer.campus || "Main Quad"}</span>
                       <span className="opacity-60">•</span>
                       <span>{peer.major}</span>
@@ -282,7 +282,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                 <div className="p-4 space-y-3">
                   {/* Bio */}
                   {peer.bio && (
-                    <p className="text-xs text-slate-600 leading-relaxed">
+                    <p className="text-xs text-slate-600 leading-relaxed font-normal">
                       "{peer.bio}"
                     </p>
                   )}
@@ -290,7 +290,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                   {/* Shared Classes or Campus Activities */}
                   {peer.classes && peer.classes.length > 0 && (
                     <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                      <GraduationCap className="w-3.5 h-3.5 text-sky-500 shrink-0" />
+                      <GraduationCap className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                       <span className="font-semibold text-slate-700">Classes:</span>
                       <span className="truncate">{peer.classes.join(", ")}</span>
                     </div>
@@ -301,42 +301,42 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                     {peer.interests.map((interest) => (
                       <span
                         key={interest}
-                        className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-[11px] font-medium"
+                        className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-violet-50 text-slate-700 hover:text-violet-700 text-[11px] font-medium transition"
                       >
                         {interest}
                       </span>
                     ))}
                   </div>
 
-                  {/* Clean Action Buttons (Friendship Focused - Say Hi, Meetup, Chat) */}
+                  {/* Clean Action Buttons (Teal primary + Purple accent) */}
                   <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
                     {/* Say Hi / Wave Button */}
                     <button
                       onClick={() => handleConnect(peer)}
-                      className={`flex-1 py-2.5 px-3 rounded-full text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs ${
+                      className={`flex-1 py-2.5 px-3 rounded-full text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs active:scale-[0.98] ${
                         isConnected
-                          ? "bg-emerald-500 text-white"
-                          : "bg-gradient-to-r from-sky-500 to-teal-400 hover:from-sky-600 hover:to-teal-500 text-white"
+                          ? "bg-emerald-600 text-white"
+                          : "bg-teal-700 hover:bg-teal-800 text-white shadow-teal-900/10"
                       }`}
                     >
                       <span className="text-sm">👋</span>
                       <span>{isConnected ? "Connected" : "Say Hi"}</span>
                     </button>
 
-                    {/* Plan Meetup */}
+                    {/* Plan Meetup with Purple Hue */}
                     <button
                       onClick={() => setSelectedPeerForPlan(peer)}
-                      className="py-2.5 px-3.5 rounded-full bg-[#e8f7f1] hover:bg-[#d8f2e7] text-emerald-800 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer border border-emerald-200/60"
+                      className="py-2.5 px-3.5 rounded-full bg-violet-50 hover:bg-violet-100 text-violet-800 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer border border-violet-200/70 active:scale-[0.98]"
                       title="Invite for study session or coffee"
                     >
-                      <Calendar className="w-3.5 h-3.5 text-emerald-600" />
+                      <Calendar className="w-3.5 h-3.5 text-violet-600" />
                       <span>Meetup</span>
                     </button>
 
                     {/* Chat Direct */}
                     <button
                       onClick={() => onStartChat(peer)}
-                      className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition cursor-pointer shrink-0"
+                      className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition cursor-pointer shrink-0 active:scale-[0.95]"
                       title="Open message chat"
                     >
                       <MessageCircle className="w-4 h-4 text-slate-700" />
@@ -349,13 +349,13 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         </div>
       ) : (
         /* =========================================================================
-           COMPACT GRID VIEW (For quick 2-column visual browsing)
+           COMPACT GRID VIEW (2-Column Visual Browsing)
            ========================================================================= */
         <div className="grid grid-cols-2 gap-3 pb-8">
           {profiles.map((peer) => (
             <div
               key={peer.id}
-              className="bg-white rounded-3xl overflow-hidden shadow-md border border-white/80 group flex flex-col justify-between"
+              className="bg-white rounded-2xl overflow-hidden shadow-xs border border-slate-200/80 group flex flex-col justify-between hover:shadow-md transition"
             >
               <div className="relative aspect-[4/4.5] bg-slate-900 overflow-hidden">
                 <img
@@ -366,7 +366,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
 
-                <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-white/30 backdrop-blur-md text-white text-[10px] font-bold">
+                <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-violet-950/75 backdrop-blur-md text-violet-100 text-[10px] font-bold border border-violet-400/30">
                   {peer.compatibility?.score ?? 80}%
                 </div>
 
@@ -374,7 +374,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                   <div className="font-display font-bold text-sm truncate">
                     {peer.name}, {peer.age}
                   </div>
-                  <div className="text-[10px] text-white/80 truncate">
+                  <div className="text-[10px] text-teal-200 truncate">
                     {peer.major}
                   </div>
                 </div>
@@ -384,7 +384,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               <div className="p-2.5 flex items-center gap-1.5">
                 <button
                   onClick={() => handleConnect(peer)}
-                  className="flex-1 py-1.5 px-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer"
+                  className="flex-1 py-1.5 px-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer"
                 >
                   <span>👋</span>
                   <span>Hi</span>
@@ -402,22 +402,22 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         </div>
       )}
 
-      {/* "CONNECTED!" FRIENDSHIP CELEBRATION MODAL (Non-romantic, high-five / friendly wave) */}
+      {/* "CONNECTED!" FRIENDSHIP CELEBRATION MODAL */}
       {showConnectCelebration && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-b from-[#bce3fa]/95 via-[#d6f2fb]/95 to-[#e4f9f0]/95 backdrop-blur-md animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-fadeIn">
           {/* Close button at top left */}
           <button
             onClick={() => setShowConnectCelebration(null)}
-            className="absolute top-6 left-6 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-slate-700 shadow-sm flex items-center justify-center transition cursor-pointer"
+            className="absolute top-6 left-6 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 shadow-md flex items-center justify-center transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
 
-          <div className="w-full max-w-sm flex flex-col items-center text-center">
-            {/* Dual Tilted Polaroid Cards with High-Five / Friendship sticker in middle */}
-            <div className="relative w-64 h-52 flex items-center justify-center mb-5">
-              {/* Left card: Current User (tilted -8 deg) */}
-              <div className="absolute left-4 top-0 w-32 h-44 rounded-3xl overflow-hidden shadow-xl border-4 border-white transform -rotate-8 bg-slate-200">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl border border-slate-100 flex flex-col items-center text-center">
+            {/* Dual Tilted Polaroid Cards with Friendship Badge */}
+            <div className="relative w-64 h-48 flex items-center justify-center mb-5">
+              {/* Left card: Current User */}
+              <div className="absolute left-6 top-0 w-28 h-40 rounded-2xl overflow-hidden shadow-xl border-4 border-white transform -rotate-8 bg-slate-200">
                 <img
                   src={currentUser.avatar}
                   alt={currentUser.name}
@@ -426,8 +426,8 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                 />
               </div>
 
-              {/* Right card: Peer (tilted +8 deg) */}
-              <div className="absolute right-4 top-2 w-32 h-44 rounded-3xl overflow-hidden shadow-xl border-4 border-white transform rotate-8 bg-slate-200">
+              {/* Right card: Peer */}
+              <div className="absolute right-6 top-2 w-28 h-40 rounded-2xl overflow-hidden shadow-xl border-4 border-white transform rotate-8 bg-slate-200">
                 <img
                   src={showConnectCelebration.avatar}
                   alt={showConnectCelebration.name}
@@ -436,29 +436,29 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                 />
               </div>
 
-              {/* Friendship High-Five Floating Badge in middle */}
-              <div className="relative z-20 w-13 h-13 rounded-full bg-white shadow-xl flex items-center justify-center ring-4 ring-sky-100 text-2xl">
+              {/* Friendship Floating Badge */}
+              <div className="relative z-20 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center ring-4 ring-teal-100 text-xl">
                 <span>👋</span>
               </div>
             </div>
 
-            {/* Clean Friendship Headline */}
-            <h2 className="font-display font-extrabold text-2xl text-[#182635] tracking-tight">
+            {/* Headline */}
+            <h2 className="font-display font-extrabold text-2xl text-slate-900 tracking-tight">
               You're Connected!
             </h2>
             <p className="text-xs text-slate-600 mt-1 max-w-[260px] leading-relaxed">
-              You and {showConnectCelebration.name.split(" ")[0]} are both on campus with {showConnectCelebration.compatibility?.score ?? 88}% shared vibes!
+              You and {showConnectCelebration.name.split(" ")[0]} are campus peers with {showConnectCelebration.compatibility?.score ?? 88}% shared vibes!
             </p>
 
-            {/* Friendship Action Options: Say Hi in Chat or Schedule Meetup */}
-            <div className="mt-6 flex flex-col w-full max-w-xs gap-2">
+            {/* Action Options: Say Hi in Chat or Schedule Meetup */}
+            <div className="mt-6 flex flex-col w-full gap-2">
               <button
                 onClick={() => {
                   const p = showConnectCelebration;
                   setShowConnectCelebration(null);
                   onStartChat(p);
                 }}
-                className="w-full py-3.5 rounded-2xl bg-[#182635] hover:bg-black text-white text-xs font-bold shadow-lg flex items-center justify-center gap-2 transition cursor-pointer"
+                className="w-full py-3 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold shadow-md flex items-center justify-center gap-2 transition cursor-pointer"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>Say Hello to {showConnectCelebration.name.split(" ")[0]}</span>
@@ -470,9 +470,9 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                   setShowConnectCelebration(null);
                   setSelectedPeerForPlan(p);
                 }}
-                className="w-full py-3 rounded-2xl bg-white/90 hover:bg-white text-emerald-800 border border-emerald-200 text-xs font-bold shadow-sm flex items-center justify-center gap-2 transition cursor-pointer"
+                className="w-full py-3 rounded-2xl bg-violet-50 hover:bg-violet-100 text-violet-800 border border-violet-200 text-xs font-bold shadow-xs flex items-center justify-center gap-2 transition cursor-pointer"
               >
-                <Calendar className="w-4 h-4 text-emerald-600" />
+                <Calendar className="w-4 h-4 text-violet-600" />
                 <span>Plan Study / Lunch Hangout</span>
               </button>
             </div>
@@ -517,7 +517,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                     onClick={() => setTempFilters({ ...tempFilters, selectedMajor: m.label })}
                     className={`py-2 px-3 rounded-2xl text-xs font-bold flex items-center gap-2 border transition cursor-pointer ${
                       tempFilters.selectedMajor === m.label
-                        ? "bg-[#182635] text-white border-[#182635]"
+                        ? "bg-teal-700 text-white border-teal-700 shadow-xs"
                         : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
                     }`}
                   >
@@ -541,7 +541,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                     onClick={() => setTempFilters({ ...tempFilters, selectedYear: yr })}
                     className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition cursor-pointer ${
                       tempFilters.selectedYear === yr
-                        ? "bg-sky-500 text-white border-sky-500"
+                        ? "bg-violet-600 text-white border-violet-600 shadow-xs"
                         : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
                     }`}
                   >
@@ -567,7 +567,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                   onFilterChange(reset);
                   setShowFilterSheet(false);
                 }}
-                className="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer"
+                className="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer transition"
               >
                 Reset
               </button>
@@ -578,7 +578,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                   onFilterChange(tempFilters);
                   setShowFilterSheet(false);
                 }}
-                className="flex-2 py-3 rounded-2xl bg-[#182635] hover:bg-black text-white font-bold text-xs shadow-md cursor-pointer"
+                className="flex-2 py-3 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-md cursor-pointer transition"
               >
                 Apply Filters
               </button>

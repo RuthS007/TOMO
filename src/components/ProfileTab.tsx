@@ -85,12 +85,17 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#bce3fa] via-[#d6f2fb] to-[#e4f9f0] text-slate-800 pb-24 pt-3 px-4 max-w-md mx-auto relative select-none">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 pb-28 pt-3 px-4 max-w-md mx-auto relative select-none">
       {/* Header */}
       <div className="flex items-center justify-between pt-1 pb-3">
-        <h1 className="font-display font-extrabold text-2xl text-[#17253b] tracking-tight">
-          Profile
-        </h1>
+        <div>
+          <h1 className="font-display font-extrabold text-2xl text-slate-900 tracking-tight">
+            My Profile
+          </h1>
+          <p className="text-[11px] text-slate-500 font-medium">
+            Your public campus profile & preferences
+          </p>
+        </div>
 
         {!isEditing ? (
           <button
@@ -104,7 +109,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
               setInterests([...currentUser.interests]);
               setIsEditing(true);
             }}
-            className="w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 shadow-sm flex items-center justify-center transition cursor-pointer"
+            className="w-9 h-9 rounded-full bg-white hover:bg-slate-50 text-slate-700 shadow-xs border border-slate-200/80 flex items-center justify-center transition cursor-pointer active:scale-95"
             title="Edit profile"
           >
             <Edit3 className="w-4 h-4" />
@@ -112,7 +117,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
         ) : (
           <button
             onClick={() => setIsEditing(false)}
-            className="w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 shadow-sm flex items-center justify-center transition cursor-pointer"
+            className="w-9 h-9 rounded-full bg-white hover:bg-slate-50 text-slate-700 shadow-xs border border-slate-200/80 flex items-center justify-center transition cursor-pointer active:scale-95"
           >
             <X className="w-4 h-4" />
           </button>
@@ -120,9 +125,9 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       </div>
 
       {savedNotice && (
-        <div className="mb-3 p-3 rounded-2xl bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center gap-2 shadow-xs">
-          <Check className="w-4 h-4" />
-          <span>Profile updated!</span>
+        <div className="mb-3 p-3 rounded-2xl bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-bold flex items-center gap-2 shadow-xs animate-fadeIn">
+          <Check className="w-4 h-4 text-emerald-600" />
+          <span>Profile updated successfully!</span>
         </div>
       )}
 
@@ -130,7 +135,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
         /* EDIT PROFILE */
         <form
           onSubmit={handleSave}
-          className="bg-white rounded-[32px] p-5 shadow-xl space-y-3.5 border border-white/80"
+          className="bg-white rounded-3xl p-5 shadow-xs space-y-3.5 border border-slate-200/80"
         >
           {/* Avatar selector */}
           <div>
@@ -145,7 +150,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
                   onClick={() => setAvatar(url)}
                   className={`w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 transition cursor-pointer ${
                     avatar === url
-                      ? "border-sky-500 ring-2 ring-sky-200 scale-105"
+                      ? "border-teal-600 ring-2 ring-teal-200 scale-105"
                       : "border-transparent opacity-60 hover:opacity-100"
                   }`}
                 >
@@ -168,7 +173,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 font-medium"
+              className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium"
               required
             />
           </div>
@@ -184,7 +189,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
                 max="45"
                 value={age}
                 onChange={(e) => setAge(parseInt(e.target.value, 10))}
-                className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 font-medium"
+                className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium"
                 required
               />
             </div>
@@ -195,7 +200,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
               <select
                 value={year}
                 onChange={(e) => setYear(e.target.value as AcademicYear)}
-                className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 font-medium"
+                className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium"
               >
                 {AVAILABLE_YEARS.map((y) => (
                   <option key={y} value={y}>
@@ -214,7 +219,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
               type="text"
               value={major}
               onChange={(e) => setMajor(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 font-medium"
+              className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium"
               required
             />
           </div>
@@ -227,7 +232,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
               rows={2}
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 resize-none font-medium"
+              className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none font-medium"
               required
             />
           </div>
@@ -240,13 +245,13 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
               {interests.map((item) => (
                 <span
                   key={item}
-                  className="px-3 py-1 rounded-full bg-sky-50 text-sky-700 text-xs font-semibold flex items-center gap-1.5"
+                  className="px-3 py-1 rounded-full bg-violet-50 text-violet-800 border border-violet-200/60 text-xs font-semibold flex items-center gap-1.5"
                 >
                   <span>{item}</span>
                   <button
                     type="button"
                     onClick={() => removeInterest(item)}
-                    className="hover:text-rose-500"
+                    className="hover:text-rose-500 cursor-pointer"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -261,12 +266,12 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
                 onChange={(e) => setNewInterestInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addInterest())}
                 placeholder="Add interest tag..."
-                className="flex-1 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none"
+                className="flex-1 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
               <button
                 type="button"
                 onClick={addInterest}
-                className="px-3 py-1.5 rounded-xl bg-sky-500 text-white text-xs font-bold"
+                className="px-3.5 py-1.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold cursor-pointer transition shadow-xs"
               >
                 Add
               </button>
@@ -277,47 +282,53 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="px-4 py-2 rounded-full bg-slate-100 text-slate-600 text-xs font-bold"
+              className="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold cursor-pointer transition"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-full bg-[#182635] text-white text-xs font-bold shadow-md cursor-pointer"
+              className="px-5 py-2 rounded-full bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold shadow-md cursor-pointer transition"
             >
-              Save
+              Save Changes
             </button>
           </div>
         </form>
       ) : (
         /* VIEW PROFILE */
-        <div className="space-y-4 pb-8">
+        <div className="space-y-3.5 pb-8">
           {/* Hero Card */}
-          <div className="bg-white rounded-[32px] p-6 shadow-xl border border-white/80 text-center flex flex-col items-center">
-            <img
-              src={currentUser.avatar}
-              alt={currentUser.name}
-              className="w-24 h-24 rounded-full object-cover ring-4 ring-sky-100 shadow-md mb-3"
-              referrerPolicy="no-referrer"
-            />
-            <h2 className="font-display font-extrabold text-xl text-[#182635]">
+          <div className="bg-white rounded-3xl p-6 shadow-xs border border-slate-200/80 text-center flex flex-col items-center">
+            <div className="relative mb-3">
+              <img
+                src={currentUser.avatar}
+                alt={currentUser.name}
+                className="w-24 h-24 rounded-full object-cover ring-4 ring-teal-50 shadow-md"
+                referrerPolicy="no-referrer"
+              />
+              <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-teal-500 ring-2 ring-white" />
+            </div>
+
+            <h2 className="font-display font-extrabold text-xl text-slate-900">
               {currentUser.name}, {currentUser.age}
             </h2>
-            <div className="flex items-center gap-1.5 text-xs text-sky-600 font-bold mt-0.5">
+            <div className="flex items-center gap-1.5 text-xs text-teal-700 font-bold mt-0.5">
               <span>{currentUser.major}</span>
               <span>•</span>
               <span>{currentUser.year}</span>
             </div>
 
-            <p className="text-xs text-slate-500 max-w-xs mt-3 leading-relaxed">
-              "{currentUser.bio}"
-            </p>
+            {currentUser.bio && (
+              <p className="text-xs text-slate-600 max-w-xs mt-3 leading-relaxed">
+                "{currentUser.bio}"
+              </p>
+            )}
 
             <div className="flex flex-wrap justify-center gap-1.5 mt-4">
               {currentUser.interests.map((interest) => (
                 <span
                   key={interest}
-                  className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium"
+                  className="px-3 py-1 rounded-full bg-violet-50 text-violet-800 border border-violet-200/60 text-xs font-medium"
                 >
                   {interest}
                 </span>
@@ -325,26 +336,26 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             </div>
           </div>
 
-          {/* Multi-User Switcher (Quick visual circles) */}
-          <div className="bg-white/80 backdrop-blur-md rounded-3xl p-4 shadow-sm">
+          {/* Multi-User Switcher */}
+          <div className="bg-white rounded-3xl p-4 shadow-xs border border-slate-200/80">
             <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-              <Repeat className="w-3.5 h-3.5 text-sky-500" />
-              <span>Switch Perspective</span>
+              <Repeat className="w-3.5 h-3.5 text-teal-600" />
+              <span>Switch Perspective (Demo Personas)</span>
             </div>
             <div className="flex items-center gap-3 overflow-x-auto pb-1 no-scrollbar">
               {peerProfiles.slice(0, 6).map((peer) => (
                 <button
                   key={peer.id}
                   onClick={() => onSwitchPersona(peer.id)}
-                  className="flex flex-col items-center gap-1 shrink-0 group cursor-pointer"
+                  className="flex flex-col items-center gap-1 shrink-0 group cursor-pointer active:scale-95 transition"
                 >
                   <img
                     src={peer.avatar}
                     alt={peer.name}
-                    className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-xs group-hover:scale-105 transition"
+                    className="w-10 h-10 rounded-full object-cover ring-2 ring-slate-100 group-hover:ring-teal-500 transition"
                     referrerPolicy="no-referrer"
                   />
-                  <span className="text-[10px] font-bold text-slate-600 max-w-[50px] truncate">
+                  <span className="text-[10px] font-bold text-slate-600 max-w-[50px] truncate group-hover:text-teal-700 transition">
                     {peer.name.split(" ")[0]}
                   </span>
                 </button>
@@ -355,7 +366,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
           {/* Log Out */}
           <button
             onClick={onLogout}
-            className="w-full py-3 rounded-full bg-white/70 hover:bg-white text-slate-500 hover:text-rose-600 text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition cursor-pointer"
+            className="w-full py-3 rounded-full bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200/80 hover:border-rose-200 text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             <span>Sign Out</span>

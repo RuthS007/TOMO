@@ -111,32 +111,32 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-[#bce3fa] via-[#d6f2fb] to-[#e4f9f0] text-slate-800 flex flex-col justify-between p-4 sm:p-6 select-none">
+    <div className="min-h-screen w-full bg-[#f8fafc] text-slate-800 flex flex-col justify-between p-4 sm:p-6 select-none">
       {/* Top Header & Progress */}
       <div className="max-w-md w-full mx-auto pt-2">
         <div className="flex items-center justify-between mb-3">
           <Logo size="sm" showText={true} />
-          <div className="text-xs font-bold px-3 py-1 rounded-full bg-white/80 text-[#182635] shadow-xs">
-            {step} / {totalSteps}
+          <div className="text-xs font-bold px-3 py-1 rounded-full bg-white text-teal-800 border border-slate-200/80 shadow-xs">
+            Step {step} of {totalSteps}
           </div>
         </div>
 
         {/* Minimal rounded progress bar */}
-        <div className="w-full bg-white/60 h-1.5 rounded-full overflow-hidden">
+        <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
           <div
-            className="h-full bg-[#182635] transition-all duration-300"
+            className="h-full bg-teal-700 transition-all duration-300"
             style={{ width: `${(step / totalSteps) * 100}%` }}
           />
         </div>
       </div>
 
-      {/* Main Questions (Visual & minimal text) */}
+      {/* Main Questions */}
       <div className="max-w-md w-full mx-auto my-auto py-4">
         {/* STEP 1: NAME */}
         {step === 1 && (
-          <div className="bg-white rounded-[32px] p-6 shadow-xl border border-white/80 animate-fadeIn">
+          <div className="bg-white rounded-3xl p-6 shadow-xs border border-slate-200/80 animate-fadeIn">
             <span className="text-3xl">👋</span>
-            <h2 className="font-display font-extrabold text-2xl text-[#182635] mt-2 mb-1">
+            <h2 className="font-display font-extrabold text-2xl text-slate-900 mt-2 mb-1">
               Your name?
             </h2>
             <p className="text-xs text-slate-500 mb-5">
@@ -148,7 +148,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Alex Chen"
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-base font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-base font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500"
               autoFocus
             />
           </div>
@@ -156,9 +156,9 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
         {/* STEP 2: AGE */}
         {step === 2 && (
-          <div className="bg-white rounded-[32px] p-6 shadow-xl border border-white/80 text-center animate-fadeIn">
+          <div className="bg-white rounded-3xl p-6 shadow-xs border border-slate-200/80 text-center animate-fadeIn">
             <span className="text-3xl">🎂</span>
-            <h2 className="font-display font-extrabold text-2xl text-[#182635] mt-2 mb-1">
+            <h2 className="font-display font-extrabold text-2xl text-slate-900 mt-2 mb-1">
               Your age?
             </h2>
             <p className="text-xs text-slate-500 mb-6">
@@ -169,17 +169,17 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               <button
                 type="button"
                 onClick={() => setAge(Math.max(16, age - 1))}
-                className="w-12 h-12 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-2xl flex items-center justify-center cursor-pointer"
+                className="w-12 h-12 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-2xl flex items-center justify-center cursor-pointer transition active:scale-95"
               >
                 -
               </button>
-              <div className="font-display font-black text-5xl text-[#182635] w-24">
+              <div className="font-display font-black text-5xl text-slate-900 w-24">
                 {age}
               </div>
               <button
                 type="button"
                 onClick={() => setAge(Math.min(40, age + 1))}
-                className="w-12 h-12 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-2xl flex items-center justify-center cursor-pointer"
+                className="w-12 h-12 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-2xl flex items-center justify-center cursor-pointer transition active:scale-95"
               >
                 +
               </button>
@@ -189,9 +189,9 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
         {/* STEP 3: YEAR */}
         {step === 3 && (
-          <div className="bg-white rounded-[32px] p-6 shadow-xl border border-white/80 animate-fadeIn">
+          <div className="bg-white rounded-3xl p-6 shadow-xs border border-slate-200/80 animate-fadeIn">
             <span className="text-3xl">🎓</span>
-            <h2 className="font-display font-extrabold text-2xl text-[#182635] mt-2 mb-1">
+            <h2 className="font-display font-extrabold text-2xl text-slate-900 mt-2 mb-1">
               Academic Year?
             </h2>
             <p className="text-xs text-slate-500 mb-4">
@@ -212,7 +212,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                   onClick={() => setYear(y as AcademicYear)}
                   className={`w-full p-3 rounded-2xl border text-left font-bold text-xs flex items-center justify-between transition cursor-pointer ${
                     year === y
-                      ? "bg-[#182635] text-white border-[#182635]"
+                      ? "bg-teal-700 text-white border-teal-700 shadow-xs"
                       : "bg-slate-50 border-slate-200 text-slate-800 hover:bg-slate-100"
                   }`}
                 >
@@ -229,9 +229,9 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
         {/* STEP 4: MAJOR */}
         {step === 4 && (
-          <div className="bg-white rounded-[32px] p-6 shadow-xl border border-white/80 animate-fadeIn">
+          <div className="bg-white rounded-3xl p-6 shadow-xs border border-slate-200/80 animate-fadeIn">
             <span className="text-3xl">📚</span>
-            <h2 className="font-display font-extrabold text-2xl text-[#182635] mt-2 mb-1">
+            <h2 className="font-display font-extrabold text-2xl text-slate-900 mt-2 mb-1">
               Your Major?
             </h2>
             <p className="text-xs text-slate-500 mb-4">
@@ -246,7 +246,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                   onClick={() => setMajor(m.name)}
                   className={`p-2.5 rounded-2xl border text-xs font-bold text-left flex items-center gap-2 transition cursor-pointer ${
                     major === m.name
-                      ? "bg-[#182635] text-white border-[#182635]"
+                      ? "bg-teal-700 text-white border-teal-700 shadow-xs"
                       : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
                   }`}
                 >
@@ -260,9 +260,9 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
         {/* STEP 5: INTERESTS */}
         {step === 5 && (
-          <div className="bg-white rounded-[32px] p-6 shadow-xl border border-white/80 animate-fadeIn">
+          <div className="bg-white rounded-3xl p-6 shadow-xs border border-slate-200/80 animate-fadeIn">
             <span className="text-3xl">✨</span>
-            <h2 className="font-display font-extrabold text-2xl text-[#182635] mt-2 mb-1">
+            <h2 className="font-display font-extrabold text-2xl text-slate-900 mt-2 mb-1">
               Interests?
             </h2>
             <p className="text-xs text-slate-500 mb-4">
@@ -279,7 +279,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                     onClick={() => toggleInterest(item.name)}
                     className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition cursor-pointer border ${
                       isSelected
-                        ? "bg-sky-500 text-white border-sky-500 shadow-sm"
+                        ? "bg-teal-700 text-white border-teal-700 shadow-xs"
                         : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
                     }`}
                   >
@@ -297,12 +297,12 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                 onChange={(e) => setCustomInterest(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && addCustom()}
                 placeholder="Add custom interest..."
-                className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none"
+                className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
               <button
                 type="button"
                 onClick={addCustom}
-                className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold cursor-pointer"
+                className="px-3 py-2 bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200/60 rounded-xl text-xs font-bold cursor-pointer transition"
               >
                 +
               </button>
@@ -312,9 +312,9 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
         {/* STEP 6: PHOTO & BIO */}
         {step === 6 && (
-          <div className="bg-white rounded-[32px] p-6 shadow-xl border border-white/80 animate-fadeIn">
+          <div className="bg-white rounded-3xl p-6 shadow-xs border border-slate-200/80 animate-fadeIn">
             <span className="text-3xl">📸</span>
-            <h2 className="font-display font-extrabold text-2xl text-[#182635] mt-2 mb-1">
+            <h2 className="font-display font-extrabold text-2xl text-slate-900 mt-2 mb-1">
               Photo & Bio
             </h2>
             <p className="text-xs text-slate-500 mb-4">
@@ -329,7 +329,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                   onClick={() => setAvatar(url)}
                   className={`w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 transition cursor-pointer ${
                     avatar === url
-                      ? "border-sky-500 ring-2 ring-sky-200 scale-105"
+                      ? "border-teal-600 ring-2 ring-teal-200 scale-105"
                       : "border-transparent opacity-60 hover:opacity-100"
                   }`}
                 >
@@ -348,7 +348,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="What do you like to do on campus?"
-              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 resize-none font-medium"
+              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none font-medium"
             />
           </div>
         )}
@@ -360,7 +360,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           <button
             type="button"
             onClick={() => setStep(step - 1)}
-            className="w-12 h-12 rounded-full bg-white/80 hover:bg-white text-slate-700 shadow-sm flex items-center justify-center cursor-pointer"
+            className="w-12 h-12 rounded-full bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 shadow-xs flex items-center justify-center cursor-pointer transition active:scale-95"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -371,7 +371,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         <button
           type="button"
           onClick={handleNext}
-          className="flex-1 py-3.5 px-6 rounded-full bg-[#182635] hover:bg-black text-white font-extrabold text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 cursor-pointer transition"
+          className="flex-1 py-3.5 px-6 rounded-full bg-teal-700 hover:bg-teal-800 text-white font-extrabold text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-2 cursor-pointer transition active:scale-[0.99]"
         >
           <span>{step === totalSteps ? "Launch Matches" : "Next"}</span>
           <ArrowRight className="w-4 h-4" />
