@@ -115,7 +115,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       {/* Top Header & Progress */}
       <div className="max-w-md w-full mx-auto pt-2">
         <div className="flex items-center justify-between mb-3">
-          <Logo size="sm" />
+          <Logo size="sm" showText={true} />
           <div className="text-xs font-bold px-3 py-1 rounded-full bg-white/80 text-[#182635] shadow-xs">
             {step} / {totalSteps}
           </div>

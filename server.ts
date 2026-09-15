@@ -837,7 +837,7 @@ async function startServer() {
   }
 
   server.listen(PORT, "0.0.0.0", () => {
-    console.log(`[CampusBuddy] Server running with WebSocket on http://0.0.0.0:${PORT}`);
+    console.log(`[TOMO] Server running with WebSocket on http://0.0.0.0:${PORT}`);
   });
 }
 

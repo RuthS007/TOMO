@@ -1,6 +1,6 @@
 {
-  "name": "CampusBuddy",
-  "description": "Student connection and buddy platform for matching peers by compatibility, finding study, lunch, and activity groups, and chatting in real time.",
+  "name": "TOMO",
+  "description": "TOMO - Campus friends, study buddies, and peer connection platform for college students.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

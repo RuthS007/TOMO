@@ -38,14 +38,13 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess, onQuickDemo }
       <div className="w-full max-w-sm">
         {/* Brand header */}
         <div className="flex flex-col items-center mb-6">
-          <div className="w-16 h-16 rounded-3xl bg-white shadow-md flex items-center justify-center mb-3 ring-4 ring-white/60">
-            <Logo size="md" />
-          </div>
-          <h1 className="font-display font-extrabold text-2xl text-[#182635] tracking-tight">
-            Campus<span className="text-sky-500">Buddy</span>
+          <Logo size="xl" className="mb-2" />
+          <h1 className="font-display font-extrabold text-3xl text-[#182635] tracking-tight flex items-center gap-1.5">
+            TOMO
+            <span className="w-2 h-2 rounded-full bg-sky-500 inline-block" />
           </h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            {isLogin ? "Welcome back" : "Find your campus crew"}
+          <p className="text-xs text-slate-500 mt-1 font-medium">
+            {isLogin ? "Welcome back to your campus crew" : "Find campus friends & study buddies"}
           </p>
         </div>
 

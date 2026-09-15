@@ -10,6 +10,7 @@ import {
   Repeat,
 } from "lucide-react";
 import { AcademicYear, PeerProfile, UserProfile } from "../types";
+import { Logo } from "./Logo";
 
 interface ProfileTabProps {
   currentUser: UserProfile;
@@ -359,6 +360,11 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <LogOut className="w-4 h-4" />
             <span>Sign Out</span>
           </button>
+
+          {/* App Brand Footer */}
+          <div className="flex flex-col items-center justify-center pt-3 pb-2 opacity-80">
+            <Logo size="sm" showText={true} subtitle="College Friends & Study Buddies" />
+          </div>
         </div>
       )}
     </div>

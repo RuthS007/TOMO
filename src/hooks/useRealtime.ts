@@ -10,9 +10,15 @@ export function useRealtime(onEvent?: (event: string, payload: unknown) => void)
   const wsRef = useRef<WebSocket | null>(null);
   const onEventRef = useRef(onEvent);
   onEventRef.current = onEvent;
+  const retryCountRef = useRef(0);
+  const timerRef = useRef<any>(null);
 
   const connect = useCallback(() => {
     if (typeof window === "undefined") return;
+    if (retryCountRef.current > 3) {
+      // Graceful fallback for static environments like Vercel where WebSockets aren't hosted
+      return;
+    }
 
     try {
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
@@ -24,6 +30,7 @@ export function useRealtime(onEvent?: (event: string, payload: unknown) => void)
 
       ws.onopen = () => {
         setIsConnected(true);
+        retryCountRef.current = 0;
       };
 
       ws.onmessage = (messageEvent) => {
@@ -32,32 +39,35 @@ export function useRealtime(onEvent?: (event: string, payload: unknown) => void)
           if (parsed.event && onEventRef.current) {
             onEventRef.current(parsed.event, parsed.payload);
           }
-        } catch (e) {
-          // parse error
+        } catch {
+          // Ignore parse errors
         }
       };
 
       ws.onclose = () => {
         setIsConnected(false);
-        // auto reconnect after 2.5s
-        setTimeout(() => {
-          if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
-            connect();
-          }
-        }, 2500);
+        retryCountRef.current += 1;
+        if (retryCountRef.current <= 3) {
+          timerRef.current = setTimeout(() => {
+            if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
+              connect();
+            }
+          }, 3000 * retryCountRef.current);
+        }
       };
 
       ws.onerror = () => {
         setIsConnected(false);
       };
-    } catch (err) {
-      console.warn("WebSocket connection error:", err);
+    } catch {
+      // Ignore initial connection errors on static hosting
     }
   }, []);
 
   useEffect(() => {
     connect();
     return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
       if (wsRef.current) {
         wsRef.current.close();
       }

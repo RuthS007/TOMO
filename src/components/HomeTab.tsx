@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { FilterOptions, PeerProfile, UserProfile } from "../types";
 import { PlanMeetupModal } from "./PlanMeetupModal";
+import { Logo } from "./Logo";
 
 interface HomeTabProps {
   currentUser: UserProfile;
@@ -78,19 +79,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
     <div className="min-h-screen bg-gradient-to-b from-[#bce3fa] via-[#d6f2fb] to-[#e4f9f0] text-slate-800 pb-28 pt-3 px-4 max-w-md mx-auto relative select-none">
       {/* Top Header - Clean, modern, friendly */}
       <div className="flex items-center justify-between pt-1 pb-2">
-        <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-2xl bg-white shadow-xs flex items-center justify-center ring-1 ring-white/80">
-            <Users className="w-5 h-5 text-sky-600" />
-          </div>
-          <div>
-            <h1 className="font-display font-extrabold text-xl text-[#17253b] tracking-tight leading-none">
-              Campus<span className="text-sky-500">Buddy</span>
-            </h1>
-            <p className="text-[10px] text-slate-500 font-medium mt-0.5">
-              Make campus friends & study buddies
-            </p>
-          </div>
-        </div>
+        <Logo size="md" showText={true} subtitle="Find campus friends & study buddies" />
 
         <div className="flex items-center gap-2">
           {/* Quick Search Toggle */}
