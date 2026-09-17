@@ -18,6 +18,7 @@ interface ProfileTabProps {
   onUpdateProfile: (updated: Partial<UserProfile>) => void;
   onSwitchPersona: (userId: string) => void;
   onLogout: () => void;
+  onRetakeQuestions?: () => void;
 }
 
 const AVATARS = [
@@ -43,6 +44,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
   onUpdateProfile,
   onSwitchPersona,
   onLogout,
+  onRetakeQuestions,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -324,17 +326,50 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
               </p>
             )}
 
-            <div className="flex flex-wrap justify-center gap-1.5 mt-4">
-              {currentUser.interests.map((interest) => (
-                <span
-                  key={interest}
-                  className="px-3 py-1 rounded-full bg-violet-50 text-violet-800 border border-violet-200/60 text-xs font-medium"
-                >
-                  {interest}
+            {currentUser.classes && currentUser.classes.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-slate-100 w-full">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5 text-center">
+                  Enrolled Classes
                 </span>
-              ))}
+                <div className="flex flex-wrap justify-center gap-1.5">
+                  {currentUser.classes.map((cls) => (
+                    <span
+                      key={cls}
+                      className="px-2.5 py-0.5 rounded-lg bg-teal-100 text-teal-800 text-[11px] font-bold"
+                    >
+                      {cls}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="mt-3 pt-3 border-t border-slate-100 w-full">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5 text-center">
+                Personal Interests
+              </span>
+              <div className="flex flex-wrap justify-center gap-1.5">
+                {currentUser.interests.map((interest) => (
+                  <span
+                    key={interest}
+                    className="px-3 py-1 rounded-full bg-violet-50 text-violet-800 border border-violet-200/60 text-xs font-medium"
+                  >
+                    {interest}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
+
+          {/* Retake Questionnaire / Update Info */}
+          {onRetakeQuestions && (
+            <button
+              onClick={onRetakeQuestions}
+              className="w-full py-3 rounded-full bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200/80 text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition cursor-pointer"
+            >
+              <span>Retake Campus Questionnaire</span>
+            </button>
+          )}
 
           {/* Multi-User Switcher */}
           <div className="bg-white rounded-3xl p-4 shadow-xs border border-slate-200/80">

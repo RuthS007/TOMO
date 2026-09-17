@@ -397,6 +397,16 @@ export function calculateCompatibility(
     reasons.push(`Shared interests: ${shared.slice(0, 3).join(", ")}`);
   }
 
+  // Class / Course matching
+  const classesA = new Set((userA.classes || []).map((c) => c.toLowerCase().trim()));
+  const sharedClasses = (peer.classes || []).filter((c) =>
+    classesA.has(c.toLowerCase().trim())
+  );
+  if (sharedClasses.length > 0) {
+    score += 20;
+    reasons.push(`Shared class: ${sharedClasses.join(", ")}`);
+  }
+
   const finalScore = Math.min(99, Math.max(45, score));
 
   return {

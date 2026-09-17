@@ -26,7 +26,7 @@ import { api } from "./services/api";
 type AppScreen = "auth" | "onboarding" | "app";
 
 export default function App() {
-  const [screen, setScreen] = useState<AppScreen>("app"); // Default to main app or auth
+  const [screen, setScreen] = useState<AppScreen>("auth"); // Starts before home on Sign Up / Login screen
   const [registeredEmail, setRegisteredEmail] = useState("student@campus.edu");
   const [currentTab, setCurrentTab] = useState<TabType>("home");
 
@@ -334,6 +334,7 @@ export default function App() {
       <OnboardingFlow
         initialEmail={registeredEmail}
         onComplete={handleOnboardingComplete}
+        onBackToAuth={() => setScreen("auth")}
       />
     );
   }
@@ -386,6 +387,7 @@ export default function App() {
                 onUpdateProfile={handleUpdateProfile}
                 onSwitchPersona={handleSwitchPersona}
                 onLogout={() => setScreen("auth")}
+                onRetakeQuestions={() => setScreen("onboarding")}
               />
             )}
           </>
