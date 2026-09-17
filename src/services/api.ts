@@ -266,8 +266,10 @@ export const api = {
     };
 
     const currentBuddies = getStoredBuddies();
-    const updated = [newAnnouncement, ...currentBuddies];
-    setStoredBuddies(updated);
+    if (!currentBuddies.some((b) => b.id === newAnnouncement.id)) {
+      const updated = [newAnnouncement, ...currentBuddies];
+      setStoredBuddies(updated);
+    }
     return newAnnouncement;
   },
 
@@ -365,6 +367,10 @@ export const api = {
       body: JSON.stringify(payload),
     });
     if (data && data.success && data.message) {
+      const msgs = getStoredMessages();
+      if (!msgs.some((m) => m.id === data.message.id)) {
+        setStoredMessages([...msgs, data.message]);
+      }
       return data.message;
     }
 
@@ -392,7 +398,9 @@ export const api = {
     };
 
     const msgs = getStoredMessages();
-    setStoredMessages([...msgs, newMessage]);
+    if (!msgs.some((m) => m.id === newMessage.id)) {
+      setStoredMessages([...msgs, newMessage]);
+    }
     return newMessage;
   },
 

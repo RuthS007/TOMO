@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   Send,
   Calendar,
@@ -37,27 +37,59 @@ export const ChatTab: React.FC<ChatTabProps> = ({
   onRespondPlan,
 }) => {
   const [inputText, setInputText] = useState("");
+  const [isSending, setIsSending] = useState(false);
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
+  // Deduplicate messages by id or identical sender/receiver/text within a close time window
+  const dedupedMessages = useMemo(() => {
+    const result: ChatMessage[] = [];
+    for (const msg of messages) {
+      const isDupe = result.some(
+        (existing) =>
+          (existing.id && msg.id && existing.id === msg.id) ||
+          (existing.senderId === msg.senderId &&
+            existing.receiverId === msg.receiverId &&
+            existing.text.trim() === msg.text.trim() &&
+            Boolean(existing.planMeetup) === Boolean(msg.planMeetup) &&
+            Math.abs(new Date(existing.timestamp).getTime() - new Date(msg.timestamp).getTime()) < 5000)
+      );
+      if (!isDupe) {
+        result.push(msg);
+      }
+    }
+    return result;
+  }, [messages]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, activePeer]);
+  }, [dedupedMessages, activePeer]);
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputText.trim() || !activePeer) return;
-    onSendMessage(activePeer.id, inputText.trim());
+    const textToSend = inputText.trim();
+    if (!textToSend || !activePeer || isSending) return;
+    setIsSending(true);
     setInputText("");
+    try {
+      await onSendMessage(activePeer.id, textToSend);
+    } finally {
+      setIsSending(false);
+    }
   };
 
-  const sendIcebreaker = (text: string) => {
-    if (!activePeer) return;
-    onSendMessage(activePeer.id, text);
+  const sendIcebreaker = async (text: string) => {
+    if (!activePeer || isSending) return;
+    setIsSending(true);
+    try {
+      await onSendMessage(activePeer.id, text);
+    } finally {
+      setIsSending(false);
+    }
   };
 
-  const latestPlanMessage = [...messages].reverse().find((m) => m.planMeetup);
+  const latestPlanMessage = [...dedupedMessages].reverse().find((m) => m.planMeetup);
   const latestPlan = latestPlanMessage?.planMeetup;
 
   const filteredPeers = peerProfiles.filter((p) =>
@@ -159,7 +191,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
 
             {/* Chat Stream */}
             <div className="flex-1 overflow-y-auto space-y-3 pr-1">
-              {messages.length === 0 ? (
+              {dedupedMessages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400">
                   <div className="w-13 h-13 rounded-full bg-teal-50 text-teal-700 flex items-center justify-center text-2xl mb-2 border border-teal-100">
                     👋
@@ -179,8 +211,9 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                     ].map((ice, i) => (
                       <button
                         key={i}
+                        disabled={isSending}
                         onClick={() => sendIcebreaker(ice)}
-                        className="px-3 py-1.5 rounded-full bg-violet-50 hover:bg-violet-100 text-violet-800 border border-violet-200/60 text-xs font-semibold transition cursor-pointer"
+                        className="px-3 py-1.5 rounded-full bg-violet-50 hover:bg-violet-100 text-violet-800 border border-violet-200/60 text-xs font-semibold transition cursor-pointer disabled:opacity-50"
                       >
                         {ice}
                       </button>
@@ -188,7 +221,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                   </div>
                 </div>
               ) : (
-                messages.map((m) => {
+                dedupedMessages.map((m) => {
                   const isMe = m.senderId === currentUser.id;
                   return (
                     <div
@@ -235,8 +268,9 @@ export const ChatTab: React.FC<ChatTabProps> = ({
             <form onSubmit={handleSend} className="pt-2.5 flex items-center gap-2 border-t border-slate-100">
               <button
                 type="button"
+                disabled={isSending}
                 onClick={() => setShowPlanModal(true)}
-                className="w-9 h-9 rounded-full bg-violet-50 hover:bg-violet-100 text-violet-700 border border-violet-200/60 flex items-center justify-center shrink-0 cursor-pointer transition active:scale-95"
+                className="w-9 h-9 rounded-full bg-violet-50 hover:bg-violet-100 text-violet-700 border border-violet-200/60 flex items-center justify-center shrink-0 cursor-pointer transition active:scale-95 disabled:opacity-50"
                 title="Plan Meetup"
               >
                 <Calendar className="w-4 h-4 text-violet-600" />
@@ -245,18 +279,19 @@ export const ChatTab: React.FC<ChatTabProps> = ({
               <input
                 type="text"
                 value={inputText}
+                disabled={isSending}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder="Type a message..."
-                className="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                placeholder={isSending ? "Sending..." : "Type a message..."}
+                className="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-75"
               />
 
               <button
                 type="submit"
-                disabled={!inputText.trim()}
+                disabled={!inputText.trim() || isSending}
                 className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition cursor-pointer active:scale-95 ${
-                  inputText.trim()
+                  inputText.trim() && !isSending
                     ? "bg-teal-700 hover:bg-teal-800 text-white shadow-xs"
-                    : "bg-slate-100 text-slate-300"
+                    : "bg-slate-100 text-slate-300 cursor-not-allowed"
                 }`}
               >
                 <Send className="w-4 h-4" />

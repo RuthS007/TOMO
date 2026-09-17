@@ -151,6 +151,23 @@ app.post("/api/buddies", (req, res) => {
     return res.status(400).json({ error: "Title, category, and location are required." });
   }
 
+  const trimmedTitle = title.trim();
+  const trimmedLocation = location.trim();
+  const now = Date.now();
+
+  // Deduplication check: if identical announcement posted within 3 seconds, return existing
+  const existingRecent = buddyAnnouncements.find(
+    (b) =>
+      b.creatorId === currentUserProfile.id &&
+      b.title.toLowerCase() === trimmedTitle.toLowerCase() &&
+      b.location.toLowerCase() === trimmedLocation.toLowerCase() &&
+      Math.abs(now - new Date(b.createdAt).getTime()) < 3000
+  );
+
+  if (existingRecent) {
+    return res.json({ success: true, announcement: existingRecent });
+  }
+
   const newAnnouncement: BuddyAnnouncement = {
     id: `buddy-${Date.now()}`,
     creatorId: currentUserProfile.id,
@@ -159,7 +176,7 @@ app.post("/api/buddies", (req, res) => {
     creatorMajor: currentUserProfile.major,
     creatorYear: currentUserProfile.year,
     category,
-    title: title.trim(),
+    title: trimmedTitle,
     description: description ? description.trim() : "",
     targetCount: Math.max(1, parseInt(targetCount || "4", 10)),
     participants: [
@@ -171,7 +188,7 @@ app.post("/api/buddies", (req, res) => {
         joinedAt: new Date().toISOString(),
       },
     ],
-    location: location.trim(),
+    location: trimmedLocation,
     meetingTime: meetingTime || "Today soon",
     tags: Array.isArray(tags) ? tags : ["Campus"],
     createdAt: new Date().toISOString(),
@@ -284,6 +301,23 @@ app.post("/api/conversations/messages", (req, res) => {
     return res.status(400).json({ error: "Receiver ID and text or plan required." });
   }
 
+  const messageText = text ? text.trim() : "Proposed a meetup plan!";
+  const now = Date.now();
+
+  // Deduplication check: if identical message/plan was sent within 3 seconds, return existing
+  const recentDuplicate = chatMessages.find(
+    (m) =>
+      m.senderId === currentUserProfile.id &&
+      m.receiverId === receiverId &&
+      m.text === messageText &&
+      Boolean(m.planMeetup) === Boolean(planMeetup) &&
+      Math.abs(now - new Date(m.timestamp).getTime()) < 3000
+  );
+
+  if (recentDuplicate) {
+    return res.json({ success: true, message: recentDuplicate });
+  }
+
   const newMessage: ChatMessage = {
     id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
     conversationId: receiverId,
@@ -291,7 +325,7 @@ app.post("/api/conversations/messages", (req, res) => {
     senderName: currentUserProfile.name,
     senderAvatar: currentUserProfile.avatar,
     receiverId,
-    text: text ? text.trim() : "Proposed a meetup plan!",
+    text: messageText,
     timestamp: new Date().toISOString(),
     planMeetup: planMeetup
       ? {

@@ -34,22 +34,26 @@ export const PlanMeetupModal: React.FC<PlanMeetupModalProps> = ({
   const [location, setLocation] = useState(CAMPUS_LOCATIONS[0]);
   const [dateTime, setDateTime] = useState("Today at 3:30 PM");
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting || submitted) return;
+    setIsSubmitting(true);
+    setSubmitted(true);
     onSubmitPlan({
       title: title.trim() || `Meet with ${peer.name}`,
       category,
       location,
       dateTime: dateTime.trim(),
     });
-    setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
+      setIsSubmitting(false);
       onClose();
-    }, 1200);
+    }, 1000);
   };
 
   return (
@@ -168,9 +172,10 @@ export const PlanMeetupModal: React.FC<PlanMeetupModalProps> = ({
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full py-3 rounded-2xl bg-teal-700 hover:bg-teal-800 font-bold text-xs uppercase tracking-wider text-white shadow-md cursor-pointer transition"
+                disabled={isSubmitting || submitted}
+                className="w-full py-3 rounded-2xl bg-teal-700 hover:bg-teal-800 font-bold text-xs uppercase tracking-wider text-white shadow-md cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Send Invite
+                {isSubmitting ? "Sending Invite..." : "Send Invite"}
               </button>
             </div>
           </form>

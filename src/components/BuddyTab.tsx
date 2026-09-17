@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Plus,
   Users,
@@ -40,6 +40,7 @@ export const BuddyTab: React.FC<BuddyTabProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<BuddyCategory | "all">("all");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
 
   // Create form state
   const [newCategory, setNewCategory] = useState<BuddyCategory>("study");
@@ -79,7 +80,25 @@ export const BuddyTab: React.FC<BuddyTabProps> = ({
     },
   ];
 
-  const filtered = announcements.filter((b) => {
+  // Client-side deduplication for announcements
+  const dedupedAnnouncements = useMemo(() => {
+    const result: BuddyAnnouncement[] = [];
+    for (const ann of announcements) {
+      const isDupe = result.some(
+        (existing) =>
+          (existing.id && ann.id && existing.id === ann.id) ||
+          (existing.creatorId === ann.creatorId &&
+            existing.title.trim().toLowerCase() === ann.title.trim().toLowerCase() &&
+            Math.abs(new Date(existing.createdAt).getTime() - new Date(ann.createdAt).getTime()) < 5000)
+      );
+      if (!isDupe) {
+        result.push(ann);
+      }
+    }
+    return result;
+  }, [announcements]);
+
+  const filtered = dedupedAnnouncements.filter((b) => {
     const matchCat = selectedCategory === "all" || b.category === selectedCategory;
     const matchSearch =
       !searchQuery ||
@@ -88,21 +107,25 @@ export const BuddyTab: React.FC<BuddyTabProps> = ({
     return matchCat && matchSearch;
   });
 
-  const handleCreate = (e: React.FormEvent) => {
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newTitle.trim() || !newLocation.trim()) return;
+    if (!newTitle.trim() || !newLocation.trim() || isCreating) return;
 
-    onCreateAnnouncement({
-      category: newCategory,
-      title: newTitle.trim(),
-      description: "",
-      targetCount: Number(newTargetCount),
-      location: newLocation.trim(),
-      meetingTime: newMeetingTime.trim() || "Today",
-      tags: [newCategory],
-    });
-
-    setShowCreateModal(false);
+    setIsCreating(true);
+    try {
+      await onCreateAnnouncement({
+        category: newCategory,
+        title: newTitle.trim(),
+        description: "",
+        targetCount: Number(newTargetCount),
+        location: newLocation.trim(),
+        meetingTime: newMeetingTime.trim() || "Today",
+        tags: [newCategory],
+      });
+      setShowCreateModal(false);
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   return (
@@ -380,9 +403,10 @@ export const BuddyTab: React.FC<BuddyTabProps> = ({
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-md cursor-pointer transition"
+                  disabled={isCreating}
+                  className="w-full py-3 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-md cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Publish Announcement
+                  {isCreating ? "Publishing..." : "Publish Announcement"}
                 </button>
               </div>
             </form>

@@ -25,6 +25,48 @@ import { api } from "./services/api";
 
 type AppScreen = "auth" | "onboarding" | "app";
 
+// Helper functions to prevent duplicate messages or invites from WebSocket + HTTP race conditions
+export const isDuplicateChatMessage = (a: ChatMessage, b: ChatMessage): boolean => {
+  if (a.id && b.id && a.id === b.id) return true;
+  const sameUsers =
+    (a.senderId === b.senderId && a.receiverId === b.receiverId) ||
+    (a.senderId === b.receiverId && a.receiverId === b.senderId);
+  if (!sameUsers) return false;
+  if (a.text.trim() !== b.text.trim()) return false;
+  const timeA = new Date(a.timestamp).getTime();
+  const timeB = new Date(b.timestamp).getTime();
+  return !isNaN(timeA) && !isNaN(timeB) && Math.abs(timeA - timeB) < 5000;
+};
+
+export const appendUniqueChatMessage = (
+  prevList: ChatMessage[],
+  newMsg: ChatMessage
+): ChatMessage[] => {
+  if (prevList.some((m) => isDuplicateChatMessage(m, newMsg))) {
+    return prevList;
+  }
+  return [...prevList, newMsg];
+};
+
+export const isDuplicateAnnouncement = (a: BuddyAnnouncement, b: BuddyAnnouncement): boolean => {
+  if (a.id && b.id && a.id === b.id) return true;
+  if (a.creatorId !== b.creatorId) return false;
+  if (a.title.trim().toLowerCase() !== b.title.trim().toLowerCase()) return false;
+  const timeA = new Date(a.createdAt).getTime();
+  const timeB = new Date(b.createdAt).getTime();
+  return !isNaN(timeA) && !isNaN(timeB) && Math.abs(timeA - timeB) < 5000;
+};
+
+export const appendUniqueAnnouncement = (
+  prevList: BuddyAnnouncement[],
+  newAnn: BuddyAnnouncement
+): BuddyAnnouncement[] => {
+  if (prevList.some((b) => isDuplicateAnnouncement(b, newAnn))) {
+    return prevList;
+  }
+  return [newAnn, ...prevList];
+};
+
 export default function App() {
   const [screen, setScreen] = useState<AppScreen>("auth"); // Starts before home on Sign Up / Login screen
   const [registeredEmail, setRegisteredEmail] = useState("student@campus.edu");
@@ -94,21 +136,14 @@ export default function App() {
     (event: string, payload: any) => {
       if (event === "chat:message") {
         const newMsg: ChatMessage = payload;
-        setChatMessages((prev) => {
-          // Idempotency check: don't add if already in list
-          if (prev.some((m) => m.id === newMsg.id)) return prev;
-          return [...prev, newMsg];
-        });
+        setChatMessages((prev) => appendUniqueChatMessage(prev, newMsg));
 
         if (currentTab !== "chat") {
           setUnreadCount((c) => c + 1);
         }
       } else if (event === "buddy:new") {
         const newAnn: BuddyAnnouncement = payload;
-        setBuddyAnnouncements((prev) => {
-          if (prev.some((b) => b.id === newAnn.id)) return prev;
-          return [newAnn, ...prev];
-        });
+        setBuddyAnnouncements((prev) => appendUniqueAnnouncement(prev, newAnn));
         if (currentTab !== "buddies") {
           setNewBuddyBadge((c) => c + 1);
         }
@@ -199,7 +234,7 @@ export default function App() {
   const handleSendMessage = async (receiverId: string, text: string) => {
     try {
       const newMsg = await api.sendMessage({ receiverId, text });
-      setChatMessages((prev) => [...prev, newMsg]);
+      setChatMessages((prev) => appendUniqueChatMessage(prev, newMsg));
     } catch (e) {
       console.error("Error sending message:", e);
     }
@@ -212,7 +247,7 @@ export default function App() {
         text: `Proposed a ${plan.category} meetup: "${plan.title}" at ${plan.location} on ${plan.dateTime}`,
         planMeetup: plan,
       });
-      setChatMessages((prev) => [...prev, newMsg]);
+      setChatMessages((prev) => appendUniqueChatMessage(prev, newMsg));
       setActiveChatPeer(peer);
       setCurrentTab("chat");
     } catch (e) {
@@ -275,7 +310,7 @@ export default function App() {
   }) => {
     try {
       const newAnn = await api.createBuddy(data);
-      setBuddyAnnouncements((prev) => [newAnn, ...prev]);
+      setBuddyAnnouncements((prev) => appendUniqueAnnouncement(prev, newAnn));
     } catch (e) {
       console.error("Error creating buddy announcement:", e);
     }
